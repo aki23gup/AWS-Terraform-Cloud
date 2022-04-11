@@ -1,5 +1,5 @@
 resource "aws_vpc" "myvpc" {
-    cidr_block = "100.64.0.0/16"
+    cidr_block = var.cidr_vpc
     enable_dns_support = true
     enable_dns_hostnames = true
     assign_generated_ipv6_cidr_block = true
@@ -29,7 +29,7 @@ resource "aws_nat_gateway" "nat" {
 resource "aws_route_table" "my_pub_RT" {
     vpc_id = aws_vpc.myvpc.id
     route {
-        cidr_block = "0.0.0.0/0"
+        cidr_block = var.cidr_default
         gateway_id = aws_internet_gateway.igw.id
     }
     tags = { Name = "my_public_RT" }
@@ -38,7 +38,7 @@ resource "aws_route_table" "my_pub_RT" {
 resource "aws_route_table" "my_priv_RT" {
     vpc_id = aws_vpc.myvpc.id
     route {
-        cidr_block = "0.0.0.0/0"
+        cidr_block = var.cidr_default
         gateway_id = aws_nat_gateway.nat.id
     }
     tags = { Name = "my_private_RT" }
@@ -46,16 +46,16 @@ resource "aws_route_table" "my_priv_RT" {
 
 resource "aws_subnet" "my-new-pub-SN" {
     vpc_id = aws_vpc.myvpc.id
-    cidr_block = "100.64.1.0/24"
-    availability_zone = "us-east-1a"
+    cidr_block = var.cidr_SN_pub
+    availability_zone = var.az
     map_public_ip_on_launch = true
     tags = { Name = "my-new-pub-SN" }
 }
 
 resource "aws_subnet" "my-new-priv-SN" {
     vpc_id = aws_vpc.myvpc.id
-    cidr_block = "100.64.2.0/24"
-    availability_zone = "us-east-1a"
+    cidr_block = var.cidr_SN_priv
+    availability_zone = var.az
     map_public_ip_on_launch = true
     tags = { Name = "my-new-priv-SN" }
 }

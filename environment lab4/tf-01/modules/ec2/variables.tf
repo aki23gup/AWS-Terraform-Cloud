@@ -24,3 +24,9 @@ variable "instance" {
   type = string
   default = "t2.micro"
 }
+
+variable "key" {
+  description = "Authentication Pem File Name"
+  type = string
+  default = "Lab1Key"
+}
